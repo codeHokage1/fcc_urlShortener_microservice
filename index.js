@@ -30,12 +30,14 @@ app.get('/api/hello', function(req, res) {
 app.post('/api/shorturl', (req, res) => {
   const urlToShorten = req.body;
   // if (!new url(urlToShorten.url)) return res.json({ "error": "url not valid" })
-  if (!urlToShorten.url.includes('http://www.') && !urlToShorten.url.includes('https://www.')) return res.json({ "error": "url not valid"})
+  if (!urlToShorten.url.includes('http://www.') && !urlToShorten.url.includes('https://www.')) return res.json({ "error": "invalid url"})
   dns.lookup(urlToShorten.url.includes('http://www.') ? urlToShorten.url.slice(7) : urlToShorten.url.slice(8), (err, addresses) => {
     if (err) return res.status(500).json({ 'error': err.message });
     const newUrl = {
       "original_url": urlToShorten.url,
-      "short_url": urlToShorten.url.slice(12, 14) + addresses[addresses.length -1],
+      // "short_url": urlToShorten.url.slice(12, 14) + addresses[addresses.length - 1],
+      "short_url": Number(addresses.split('.').reverse()[0]),
+      // addresses
     }
     UrlModel.create(newUrl, (err, data) => {
       if (err) return res.status(500).json({ "error": err.message })
