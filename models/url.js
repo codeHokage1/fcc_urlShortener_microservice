@@ -6,7 +6,7 @@ const urlSchema = new Schema({
         type: String,
         required: [true, "Must input a url"]
     },
-    "short_url": String
+    "short_url": Number
 })
 
 module.exports = mongoose.model("Url", urlSchema);

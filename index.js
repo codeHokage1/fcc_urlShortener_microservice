@@ -49,7 +49,7 @@ app.post('/api/shorturl', (req, res) => {
 
 // endpoint to redirect shorturl to original website
 app.get('/api/shorturl/:url', (req, res) => {
-  const urlToConvert = req.params.url;
+  const urlToConvert = Number(req.params.url);
   UrlModel.findOne({
     "short_url": urlToConvert
   }, (err, result) => {
