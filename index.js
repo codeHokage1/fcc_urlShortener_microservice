@@ -34,7 +34,7 @@ app.post('/api/shorturl', (req, res) => {
   dns.lookup(urlToShorten.url.includes('http://www.') ? urlToShorten.url.slice(7) : urlToShorten.url.slice(8), (err, addresses) => {
     if (err) return res.status(500).json({ 'error': err.message });
     const newUrl = {
-      "original_url": urlToShorten.url,
+      "original_url": new url (urlToShorten.url),
       // "short_url": urlToShorten.url.slice(12, 14) + addresses[addresses.length - 1],
       "short_url": Number(addresses.split('.').reverse()[0]),
       // addresses
