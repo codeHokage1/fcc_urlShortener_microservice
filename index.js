@@ -6,6 +6,8 @@ const dns = require('dns');
 const url = require('url').URL;
 const connectDB = require('./config/dbConfig')
 const UrlModel = require('./models/url')
+const { v4: uuidv4 } = require('uuid');
+
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -28,28 +30,26 @@ app.get('/api/hello', function(req, res) {
 
 // endpoint to create a short url
 app.post('/api/shorturl', (req, res) => {
-  const urlToShorten = req.body;
-  // if (!new url(urlToShorten.url)) return res.json({ "error": "url not valid" })
-  if (!urlToShorten.url.includes('http://www.') && !urlToShorten.url.includes('https://www.')) return res.json({ "error": "invalid url"})
-  dns.lookup(urlToShorten.url.includes('http://www.') ? urlToShorten.url.slice(7) : urlToShorten.url.slice(8), (err, addresses) => {
-    if (err) return res.status(500).json({ 'error': err.message });
+  const urlToShorten = req.body.url;
+  try {
+    const url2 = new url(urlToShorten);
     const newUrl = {
-      "original_url": urlToShorten.url,
-      // "short_url": urlToShorten.url.slice(12, 14) + addresses[addresses.length - 1],
-      "short_url": Number(addresses.split('.').reverse()[0]),
-      // addresses
+      "original_url": urlToShorten,
+      "short_url": uuidv4().slice(0, 4)
     }
     UrlModel.create(newUrl, (err, data) => {
       if (err) return res.status(500).json({ "error": err.message })
       res.status(201).json({...newUrl})
-    })
-  })
+    }) 
+  } catch (error) {
+    return res.json({ "error": "invalid url" })
+  }
 })
 
 
 // endpoint to redirect shorturl to original website
 app.get('/api/shorturl/:url', (req, res) => {
-  const urlToConvert = Number(req.params.url);
+  const urlToConvert = req.params.url;
   UrlModel.findOne({
     "short_url": urlToConvert
   }, (err, result) => {
@@ -59,7 +59,7 @@ app.get('/api/shorturl/:url', (req, res) => {
 })
 
 
-//connect database
+//connect database and listen to port
 const connectAndListen = async () => {
   try {
       await connectDB();
@@ -73,12 +73,3 @@ const connectAndListen = async () => {
 
 
 connectAndListen();
-
-
-
-
-
-// res.json({
-//   "original_url": urlToShorten.url,
-//   "short_url": 
-// })
