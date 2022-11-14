@@ -29,8 +29,9 @@ app.get('/api/hello', function(req, res) {
 // endpoint to create a short url
 app.post('/api/shorturl', (req, res) => {
   const urlToShorten = req.body;
-  if (!new url(urlToShorten.url)) return res.json({ "error": "url not valid"})
-  dns.lookup(urlToShorten.url.slice(8), (err, addresses) => {
+  // if (!new url(urlToShorten.url)) return res.json({ "error": "url not valid" })
+  if (!urlToShorten.url.includes('http://www.') && !urlToShorten.url.includes('https://www.')) return res.json({ "error": "url not valid"})
+  dns.lookup(urlToShorten.url.includes('http://www.') ? urlToShorten.url.slice(7) : urlToShorten.url.slice(8), (err, addresses) => {
     if (err) return res.status(500).json({ 'error': err.message });
     const newUrl = {
       "original_url": urlToShorten.url,
