@@ -39,7 +39,7 @@ app.post('/api/shorturl', (req, res) => {
     }
     UrlModel.create(newUrl, (err, data) => {
       if (err) return res.status(500).json({ "error": err.message })
-      res.status(201).json({...newUrl})
+      res.json({...newUrl})
     }) 
   } catch (error) {
     return res.json({ "error": "invalid url" })
