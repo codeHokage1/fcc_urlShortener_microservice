@@ -2,7 +2,7 @@
 
 This is a project done in completion of my Backend & API development course on FreeCodeCamp. It returns a shortned URL, that can be redirected to the original website
 
-Link to live API :link: : https://fcc-timestamp-microservice-one.vercel.app
+Link to live API :link: : https://fcc-url-shortener-microservice-xi.vercel.app/
 
 ```
 GET / 
