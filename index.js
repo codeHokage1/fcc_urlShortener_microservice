@@ -35,19 +35,19 @@ app.post('/api/shorturl', (req, res) => {
     const url2 = new url(urlToShorten);
 
     dns.lookup(url2.hostname, (err, data) => {
-      if (err) throw err.message;
-      console.log(data);      
+      if(err) return res.json({"error" : "invalid url"})
+      console.log(data)
+    })
 
-      const newUrl = {
-        "original_url": urlToShorten,
-        "short_url": uuidv4().slice(0, 4)
-      }
-      UrlModel.create(newUrl, (err, data) => {
-        if (err) return res.status(500).json({ "error": err.message })
-        res.json({...newUrl})
-      })
+    const newUrl = {
+      "original_url": urlToShorten,
+      "short_url": uuidv4().slice(0, 4)
+    }
+    UrlModel.create(newUrl, (err, data) => {
+      if (err) return res.status(500).json({ "error": err.message })
+      return res.json({...newUrl})
+    })
 
-  })
   } catch (error) {
     return res.json({ "error": "invalid url" })
   }
