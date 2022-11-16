@@ -35,9 +35,8 @@ app.post('/api/shorturl', (req, res) => {
     const url2 = new url(urlToShorten);
 
     dns.lookup(url2.hostname, (err, data) => {
-      if (err) throw new Error(err.message);
-      console.log(data);
-      
+      if (err) throw err.message;
+      console.log(data);      
 
       const newUrl = {
         "original_url": urlToShorten,
